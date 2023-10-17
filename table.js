@@ -132,31 +132,3 @@ class GoogleSheetTable {
    
 }
 
-
-
-const maURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTncsFPbgDZgbId6M0M48PztV7AnyblTHCuEcA-NMttncTZXcUeN6mo1vLwp9AijMOLXuXTXcKvU72P/pub?gid=1838639494&single=true&output=csv'
-
-
-
-const nyURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTncsFPbgDZgbId6M0M48PztV7AnyblTHCuEcA-NMttncTZXcUeN6mo1vLwp9AijMOLXuXTXcKvU72P/pub?gid=0&single=true&output=csv';
-
-const njURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTncsFPbgDZgbId6M0M48PztV7AnyblTHCuEcA-NMttncTZXcUeN6mo1vLwp9AijMOLXuXTXcKvU72P/pub?gid=1892172854&single=true&output=csv'
-
-const paURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTncsFPbgDZgbId6M0M48PztV7AnyblTHCuEcA-NMttncTZXcUeN6mo1vLwp9AijMOLXuXTXcKvU72P/pub?gid=1019792080&single=true&output=csv'
-
-const mdURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTncsFPbgDZgbId6M0M48PztV7AnyblTHCuEcA-NMttncTZXcUeN6mo1vLwp9AijMOLXuXTXcKvU72P/pub?gid=2121923700&single=true&output=csv'
-
-
-
-const nyTable = new GoogleSheetTable(nyURL);
-const njTable = new GoogleSheetTable(njURL);
-const paTable = new GoogleSheetTable(paURL);
-const mdTable = new GoogleSheetTable(mdURL);
-const maTable = new GoogleSheetTable(maURL);
-
-
-nyTable.fetchAndRender()
-njTable.fetchAndRender()
-paTable.fetchAndRender()
-mdTable.fetchAndRender()
-maTable.fetchAndRender()
