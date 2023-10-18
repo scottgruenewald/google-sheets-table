@@ -2,6 +2,7 @@ class GoogleSheetTable {
   constructor(url, mainSelector = 'main', title = '') {
     this.url = url;
     this.mainElement = document.querySelector(mainSelector);
+    console.log(this.mainElement)
     this.table = null;
     this.title = title
     this.uniqueId = Math.random().toString(36).substring(2); // Generate a random unique ID for each table
