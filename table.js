@@ -2,7 +2,6 @@ class GoogleSheetTable {
   constructor(url, mainSelector = 'main', title = '', noDataMessage = '') {
     this.url = url;
     this.mainElement = document.querySelector(mainSelector);
-    console.log(this.mainElement)
     this.table = null;
     this.title = title
     this.noDataMessage = noDataMessage
