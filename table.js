@@ -1,10 +1,11 @@
 class GoogleSheetTable {
-  constructor(url, mainSelector = 'main', title = '') {
+  constructor(url, mainSelector = 'main', title = '', noDataMessage = '') {
     this.url = url;
     this.mainElement = document.querySelector(mainSelector);
     console.log(this.mainElement)
     this.table = null;
     this.title = title
+    this.noDataMessage = noDataMessage
     this.uniqueId = Math.random().toString(36).substring(2); // Generate a random unique ID for each table
 
   }
@@ -75,6 +76,23 @@ class GoogleSheetTable {
     return tbody;
   }
   renderTable(data) {
+
+
+    if (data.length === 0) {
+      const messageElement = document.createElement('h2');
+      messageElement.innerText = this.noDataMessage;
+      this.mainElement.appendChild(messageElement);
+      return;
+    }
+
+
+    if (this.title) {
+      const titleElement = document.createElement('h2');
+      titleElement.innerText = this.title;
+      this.mainElement.appendChild(titleElement);
+    }
+
+
     this.table = document.createElement('table');
     this.table.className = 'table table-striped table-bordered';  // Bootstrap classes for styling
 
