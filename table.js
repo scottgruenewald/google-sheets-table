@@ -1,3 +1,4 @@
+  
 class GoogleSheetTable {
 constructor(url, mainSelector = 'main', title = '', noDataMessage = '') {
   this.url = url;
@@ -7,6 +8,7 @@ constructor(url, mainSelector = 'main', title = '', noDataMessage = '') {
   this.noDataMessage = noDataMessage
   this.injectStyles();
 
+  this.uniqueClass = 'google-sheet-table-generated-content'; // A unique class to identify script-generated elements
 
   this.uniqueId = Math.random().toString(36).substring(2); // Generate a random unique ID for each table
 
@@ -54,7 +56,11 @@ setupResizeListener() {
 
 updateView(data, columns) {
   // Clear the current content
-  this.mainElement.innerHTML = '';
+  const elementsToRemove = this.mainElement.querySelectorAll(`.${this.uniqueClass}`);
+  elementsToRemove.forEach(element => element.remove());
+
+
+
 
   // Check for data length to decide if we need to display noDataMessage
   if (!data || data.length === 0) {
@@ -64,6 +70,7 @@ updateView(data, columns) {
     if (this.title) {
       const titleElement = document.createElement('h2');
       titleElement.innerText = this.title;
+      titleElement.classList.add(this.uniqueClass)
       this.mainElement.appendChild(titleElement);
     }
 
@@ -213,7 +220,11 @@ renderMobileSearchFields(columns) {
 
 renderMobile(data, columns) {
   const container = document.createElement('div');
-  container.className = 'mobile-table-container';
+  container.className = `mobile-table-container ${this.uniqueClass}`;
+
+
+
+
   container.classList.add('mt-3')
   const searchFields = this.renderMobileSearchFields(columns);
   container.appendChild(searchFields);
@@ -251,11 +262,15 @@ renderTable(data) {
   if (this.title) {
     const titleElement = document.createElement('h2');
     titleElement.innerText = this.title;
+    titleElement.classList.add(this.uniqueClass)
     this.mainElement.appendChild(titleElement);
   }
 
   this.table = document.createElement('table');
-  this.table.className = 'table table-striped table-bordered';  // Bootstrap classes for styling
+  this.table.className = `table table-striped table-bordered ${this.uniqueClass}`;
+    
+
+
   const columns = Object.keys(data[0]);
   const thead = this.createTableHeader(columns);
   const tbody = this.createTableBody(data, columns);
