@@ -27,18 +27,16 @@ injectStyles() {
         /* Your styles for mobile container */
       }
       .mobile-table-card {
-        /* Your styles for each card */
         margin-bottom: 10px;
         border: 1px solid #ddd;
         padding: 10px;
         border-radius: 4px;
       }
       .mobile-table-date {
-        /* Your styles for the date section of the card */
         font-weight: bold;
       }
       .mobile-table-details {
-        /* Your styles for the details section of the card */
+
       }
       .table {
         display: none; /* Hide the table on mobile */
@@ -57,27 +55,48 @@ setupResizeListener() {
 updateView(data, columns) {
   // Clear the current content
   this.mainElement.innerHTML = '';
-  console.log(columns)
 
-  // Decide which view to render based on the window size
-  if (this.isMobileDevice()) {
-    const mobileContainer = this.renderMobile(data, columns);
-    this.mainElement.appendChild(mobileContainer);
+  // Check for data length to decide if we need to display noDataMessage
+  if (!data || data.length === 0) {
+    this.renderNoDataMessage();
   } else {
-    const tableContainer = document.createElement('div');
-    tableContainer.className = 'text-center mt-3';
+    // Update or set the title if it exists
+    if (this.title) {
+      const titleElement = document.createElement('h2');
+      titleElement.innerText = this.title;
+      this.mainElement.appendChild(titleElement);
+    }
 
-    const thead = this.createTableHeader(columns);
-    const tbody = this.createTableBody(data, columns);
+    // Decide which view to render based on the window size
+    if (this.isMobileDevice()) {
+      const mobileContainer = this.renderMobile(data, columns);
+      this.mainElement.appendChild(mobileContainer);
+    } else {
+      // Initialize the table
+      this.table.innerHTML = ''; // Ensure table is cleared before adding new content
+      const tableContainer = document.createElement('div');
+      tableContainer.className = 'text-center mt-3';
 
-    this.table.appendChild(thead);
-    this.table.appendChild(tbody);
-    tableContainer.appendChild(this.table);
-    this.mainElement.appendChild(tableContainer);
+      // Create table header and body
+      const thead = this.createTableHeader(columns);
+      const tbody = this.createTableBody(data, columns);
+
+      // Append thead and tbody to the table
+      this.table.appendChild(thead);
+      this.table.appendChild(tbody);
+
+      // Append the table to the table container and then to the main element
+      tableContainer.appendChild(this.table);
+      this.mainElement.appendChild(tableContainer);
+    }
   }
 }
 
-
+renderNoDataMessage() {
+  const messageElement = document.createElement('h2');
+  messageElement.innerText = this.noDataMessage;
+  this.mainElement.appendChild(messageElement);
+}
 
 debounce(func, wait, immediate) {
   let timeout;
@@ -95,24 +114,29 @@ debounce(func, wait, immediate) {
 }
 
 
-
 fetchAndRender() {
   fetch(this.url)
     .then(response => response.text())
     .then(csvString => this.parseCSV(csvString))
     .then(data => {
-      this.currentData = data;
-      this.currentColumns = Object.keys(data[0]);
-      this.renderTable(data);
+      if (data.length > 0) {
+        this.currentData = data;
+        this.currentColumns = Object.keys(data[0]);
+        this.renderTable(data);
+      } else {
+        // If there's no data, call renderTable with an empty array
+        // to ensure the noDataMessage is rendered.
+        this.renderTable([]);
+      }
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+      console.error(err);
+      // If there's an error (such as a failed fetch), also ensure the noDataMessage is rendered.
+      this.renderTable([]);
+    });
 
-
-  this.setupResizeListener()
-
-
+  this.setupResizeListener();
 }
-
 parseCSV(csvString) {
   return Papa.parse(csvString, {
     header: true,
@@ -201,7 +225,7 @@ renderMobile(data, columns) {
     columns.forEach(col => {
       const detail = document.createElement('p');
       const keySpan = document.createElement('span');
-      keySpan.className = 'key-col';
+      keySpan.className = 'key-col fw-bold';
       keySpan.textContent = `${col}: `;
       const valueSpan = document.createElement('span');
       valueSpan.className = 'val-col';
@@ -220,9 +244,7 @@ renderMobile(data, columns) {
 
 renderTable(data) {
   if (data.length === 0) {
-    const messageElement = document.createElement('h2');
-    messageElement.innerText = this.noDataMessage;
-    this.mainElement.appendChild(messageElement);
+    this.renderNoDataMessage()
     return;
   }
 
